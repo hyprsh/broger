@@ -87,6 +87,29 @@ const gallery = [
     </div>
   </section>
 
+  <!-- ===== RÜCKTRITT / STATEMENT ===== -->
+  <section id="ruecktritt" class="relative isolate scroll-mt-16 overflow-hidden bg-ink py-28 text-snow">
+    <img
+      src={img('photos/race-5.jpg')}
+      alt=""
+      aria-hidden="true"
+      class="parallax-img -z-10 opacity-25"
+      data-parallax="0.14"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-ink via-ink/85 to-ink"></div>
+
+    <div class="reveal mx-auto max-w-3xl px-5 text-center">
+      <p class="font-display text-xs uppercase tracking-[0.3em] text-gold">{retirement.eyebrow}</p>
+      <h2 class="mt-4 text-4xl font-bold sm:text-6xl">{retirement.title}</h2>
+      <div class="mx-auto mt-8 max-w-2xl space-y-5 text-lg leading-relaxed text-snow/85">
+        {retirement.paragraphs.map((p) => <p>{p}</p>)}
+      </div>
+      <p class="mt-10 font-display text-2xl text-gold">{retirement.signoff}</p>
+      <p class="mt-2 text-sm uppercase tracking-[0.2em] text-snow/70">{retirement.signature}</p>
+    </div>
+  </section>
+
   <!-- ===== PERSON ===== -->
   <section id="person" class="mx-auto max-w-6xl scroll-mt-20 px-5 py-24">
     <div class="reveal mx-auto max-w-2xl text-center">
@@ -281,29 +304,6 @@ const gallery = [
       <figcaption id="lightbox-cap" class="text-sm text-snow/70"></figcaption>
     </figure>
   </div>
-
-  <!-- ===== RÜCKTRITT / STATEMENT ===== -->
-  <section id="ruecktritt" class="relative isolate scroll-mt-16 overflow-hidden bg-ink py-28 text-snow">
-    <img
-      src={img('photos/race-5.jpg')}
-      alt=""
-      aria-hidden="true"
-      class="parallax-img -z-10 opacity-25"
-      data-parallax="0.14"
-      loading="lazy"
-    />
-    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-ink via-ink/85 to-ink"></div>
-
-    <div class="reveal mx-auto max-w-3xl px-5 text-center">
-      <p class="font-display text-xs uppercase tracking-[0.3em] text-gold">{retirement.eyebrow}</p>
-      <h2 class="mt-4 text-4xl font-bold sm:text-6xl">{retirement.title}</h2>
-      <div class="mx-auto mt-8 max-w-2xl space-y-5 text-lg leading-relaxed text-snow/85">
-        {retirement.paragraphs.map((p) => <p>{p}</p>)}
-      </div>
-      <p class="mt-10 font-display text-2xl text-gold">{retirement.signoff}</p>
-      <p class="mt-2 text-sm uppercase tracking-[0.2em] text-snow/70">{retirement.signature}</p>
-    </div>
-  </section>
 
   <!-- ===== SPONSORING ===== -->
   <section id="sponsoring" class="scroll-mt-16 bg-white py-24">
