@@ -25,13 +25,15 @@ const ranked = [...stats.rows]
   .filter((r) => Number(r[2]) > 0)
   .sort((a, b) => Number(b[2]) - Number(a[2]));
 
+// Editorial collage — `cls` controls the grid span of each tile (4-col grid).
 const gallery = [
-  { src: 'photos/king-george.jpg', alt: 'King George im Vormarsch', big: true },
-  { src: 'photos/race-1.jpg', alt: 'Skikjöring-Rennen am White Turf' },
-  { src: 'photos/race-3.jpg', alt: 'Auf dem gefrorenen St. Moritzersee' },
-  { src: 'photos/race-2.jpg', alt: 'Skikjöring in voller Fahrt' },
-  { src: 'photos/race-4.jpg', alt: 'Rennszene am White Turf' },
-  { src: 'photos/race-5.jpg', alt: 'Skikjöring St. Moritz' },
+  { src: 'photos/king-george.jpg', alt: 'King George im Vormarsch', cls: 'col-span-2 row-span-2' },
+  { src: 'photos/race-1.jpg', alt: 'Skikjöring-Rennen am White Turf', cls: 'col-span-2' },
+  { src: 'photos/race-3.jpg', alt: 'Auf dem gefrorenen St. Moritzersee', cls: '' },
+  { src: 'photos/race-4.jpg', alt: 'Rennszene am White Turf', cls: '' },
+  { src: 'photos/race-2.jpg', alt: 'Skikjöring in voller Fahrt', cls: '' },
+  { src: 'photos/race-5.jpg', alt: 'Skikjöring St. Moritz', cls: '' },
+  { src: 'photos/hero.jpg', alt: 'Jakob Broger im Rennen', cls: 'col-span-2' },
 ];
 ---
 
@@ -41,7 +43,8 @@ const gallery = [
     <img
       src={img('photos/hero.jpg')}
       alt="Jakob Broger beim Skikjöring am White Turf St. Moritz"
-      class="kenburns absolute inset-0 -z-10 h-full w-full object-cover object-center"
+      class="parallax-img -z-10 object-center"
+      data-parallax="0.18"
       fetchpriority="high"
     />
     <div class="absolute inset-0 -z-10 bg-gradient-to-b from-ink/70 via-ink/45 to-ink/85"></div>
@@ -231,16 +234,38 @@ const gallery = [
       <div class="reveal max-w-2xl">
         <p class="font-display text-xs uppercase tracking-[0.3em] text-glacier">Impressionen</p>
         <h2 class="mt-3 text-3xl font-bold sm:text-5xl">Bilder vom Eis</h2>
+        <p class="mt-4 text-lg text-ink/70">Rennszenen vom White Turf St. Moritz — zum Vergrössern anklicken.</p>
       </div>
-      <div class="mt-10 grid auto-rows-[200px] grid-cols-2 gap-4 md:grid-cols-4">
+      <div class="mt-10 grid auto-rows-[160px] grid-cols-2 gap-3 sm:auto-rows-[190px] md:grid-cols-4">
         {gallery.map((g) => (
-          <figure class:list={['reveal group overflow-hidden rounded-2xl', g.big ? 'col-span-2 row-span-2' : '']}>
-            <img src={img(g.src)} alt={g.alt} class="h-full w-full object-cover transition duration-700 group-hover:scale-105" loading="lazy" />
-          </figure>
+          <button
+            type="button"
+            class:list={['gallery-item reveal group relative overflow-hidden rounded-2xl', g.cls]}
+            data-full={img(g.src)}
+            data-caption={g.alt}
+            aria-label={`Bild vergrössern: ${g.alt}`}
+          >
+            <img src={img(g.src)} alt={g.alt} class="h-full w-full object-cover transition duration-700 group-hover:scale-110" loading="lazy" />
+            <span class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/0 to-ink/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
+            <span class="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 p-4 text-left text-sm font-medium text-snow opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+              {g.alt}
+            </span>
+          </button>
         ))}
       </div>
     </div>
   </section>
+
+  <!-- Lightbox overlay -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Bildansicht">
+    <button id="lightbox-close" class="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-snow transition hover:bg-white/20" aria-label="Schliessen">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+    <figure class="flex flex-col items-center gap-3">
+      <img id="lightbox-img" src="" alt="" />
+      <figcaption id="lightbox-cap" class="text-sm text-snow/70"></figcaption>
+    </figure>
+  </div>
 
   <!-- ===== RÜCKTRITT / STATEMENT ===== -->
   <section id="ruecktritt" class="relative isolate scroll-mt-16 overflow-hidden bg-ink py-28 text-snow">
@@ -248,7 +273,8 @@ const gallery = [
       src={img('photos/race-5.jpg')}
       alt=""
       aria-hidden="true"
-      class="absolute inset-0 -z-10 h-full w-full object-cover opacity-20"
+      class="parallax-img -z-10 opacity-25"
+      data-parallax="0.14"
       loading="lazy"
     />
     <div class="absolute inset-0 -z-10 bg-gradient-to-b from-ink via-ink/85 to-ink"></div>
@@ -327,4 +353,63 @@ const gallery = [
     { rootMargin: '0px 0px -10% 0px', threshold: 0.05 }
   );
   els.forEach((el) => io.observe(el));
+
+  // Parallax: translate oversized images based on their section's viewport position.
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const layers = [...document.querySelectorAll('[data-parallax]')].map((el) => ({
+    el,
+    speed: parseFloat(el.getAttribute('data-parallax')) || 0.15,
+    section: el.closest('section') || el.parentElement,
+  }));
+  let ticking = false;
+  const updateParallax = () => {
+    const vh = window.innerHeight;
+    for (const { el, speed, section } of layers) {
+      const rect = section.getBoundingClientRect();
+      if (rect.bottom < -100 || rect.top > vh + 100) continue; // skip offscreen
+      const offset = rect.top + rect.height / 2 - vh / 2;
+      el.style.transform = `translate3d(0, ${(-offset * speed).toFixed(1)}px, 0)`;
+    }
+    ticking = false;
+  };
+  if (!reduceMotion && layers.length) {
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', updateParallax);
+    updateParallax();
+  }
+
+  // Lightbox: click a gallery tile to view the photo full-size.
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightbox-img');
+  const lbCap = document.getElementById('lightbox-cap');
+  const lbClose = document.getElementById('lightbox-close');
+  const openLightbox = (full, caption) => {
+    lbImg.setAttribute('src', full);
+    lbImg.setAttribute('alt', caption || '');
+    lbCap.textContent = caption || '';
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+  const closeLightbox = () => {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+  document.querySelectorAll('.gallery-item').forEach((btn) =>
+    btn.addEventListener('click', () =>
+      openLightbox(btn.getAttribute('data-full'), btn.getAttribute('data-caption'))
+    )
+  );
+  lbClose?.addEventListener('click', closeLightbox);
+  lb?.addEventListener('click', (e) => {
+    if (e.target === lb) closeLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lb?.classList.contains('open')) closeLightbox();
+  });
 </script>
