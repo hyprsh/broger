@@ -83,32 +83,15 @@ export const partners = [
   { name: 'SRV Rennreiter', logo: 'srv.png', url: 'https://rennreiter.ch' },
 ];
 
-export const news = [
-  {
-    date: '31. Dezember 2022',
-    title: 'Alles hat seine Zeit (Karriereende)',
-    body: [
-      'Das Skikjöring ist die rennsportliche Weltexklusivität von White Turf. Daran durfte ich als Fahrer während vielen Jahren erfolgreich mitwirken. Alles hat seine Zeit: für mich ist heute als aktiver Skikjöringfahrer Schluss!',
-      'Der Kampf um die Königskrone im Rahmen der Credit Suisse Skikjöring Trophy war mir all die Jahre Ansporn für meine Leidenschaft. Und oft durfte ich auch schöne Erfolge feiern. So konnte ich bei 61 Starts 24 Siege erringen und damit 11 Mal die Trophy resp. die Krone als erfolgreichster Skikjöringfahrer gewinnen. Nach 24 Saisons als aktiver Fahrer und mit bald 63 Altersjahren ist der Zeitpunkt für den Rücktritt und das Platzmachen für den Nachwuchs gekommen.',
-      'Ich danke den Besitzern und Trainern für ihr Vertrauen, den Verantwortlichen des White Turf, der Credit Suisse und den vielen Helfern für ihr unermüdliches Engagement, meinen Konkurrenten für deren Fairness, meinen Fans für die treue Unterstützung und meiner Familie, speziell meiner Frau, fürs Verständnis meiner aussergewöhnlichen Passion.',
-      'Allegra und bis bald am White Turf — Jakob (Köbi) Broger',
-    ],
-  },
-  {
-    date: '20. Februar 2022',
-    title: 'White Turf St. Moritz am 13. Februar 2022',
-    body: ['Impressionen vom Renntag auf dem gefrorenen St. Moritzersee.'],
-  },
-  {
-    date: '7. Februar 2019',
-    title: 'Der Ex-König will wieder auf den Thron',
-    body: [
-      'Pferderennen. In den 1990er Jahren war er der erste Flachländer, der in die Domäne der Engadiner einbrach. Nun will der Wangemer Köbi Broger zum elften Mal den prestigeträchtigen Skikjöring-Titel gewinnen…',
-    ],
-  },
-  {
-    date: '27. September 2018',
-    title: 'Skikjöring ist Action, Spass und viel Adrenalin',
-    body: ['Interview von Florian Brauchli — erschienen in der Pferdewoche Nr. 38/2018.'],
-  },
-];
+// Career end — shown as a prominent statement section. Jakob retired after the
+// 2022 season. Text condensed from his farewell message of 31. Dezember 2022.
+export const retirement = {
+  eyebrow: 'Rücktritt nach der Saison 2022',
+  title: 'Alles hat seine Zeit',
+  paragraphs: [
+    'Das Skikjöring ist die rennsportliche Weltexklusivität von White Turf. Daran durfte ich als Fahrer während vielen Jahren erfolgreich mitwirken. Alles hat seine Zeit: für mich ist als aktiver Skikjöringfahrer Schluss.',
+    'Nach 24 Saisons als aktiver Fahrer und mit bald 63 Altersjahren ist der Zeitpunkt für den Rücktritt und das Platzmachen für den Nachwuchs gekommen. Ich danke den Besitzern und Trainern für ihr Vertrauen, dem White Turf, der Credit Suisse und den vielen Helfern für ihr Engagement, meinen Konkurrenten für ihre Fairness, meinen Fans für die treue Unterstützung und meiner Familie für das Verständnis meiner aussergewöhnlichen Passion.',
+  ],
+  signoff: 'Allegra und bis bald am White Turf',
+  signature: 'Jakob (Köbi) Broger',
+};

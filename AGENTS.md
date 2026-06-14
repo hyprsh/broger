@@ -19,7 +19,9 @@ branch. The site language is **German** — keep all visitor-facing text in Germ
   into the right file edit yourself — do not ask them about tools or code.
 - **Almost all text and data lives in one file: `src/data/site.js`.** Prefer
   editing there over touching page markup. It holds the profile, career timeline,
-  statistics table, top horses, sponsors, and news.
+  statistics table, top horses, sponsors, and the retirement statement.
+- Jakob is **retired** (after the 2022 season). Keep visitor-facing copy in the
+  past tense; the `retirement` block in `src/data/site.js` is his farewell.
 - After ANY change, you MUST (1) build successfully and (2) publish (see below).
 - Keep changes small and verifiable. Always run the build before publishing.
 
@@ -53,7 +55,7 @@ want to review before publishing.
 
 | You want to change… | Edit… |
 | --- | --- |
-| Any text, bio, stats, news, sponsors | `src/data/site.js` |
+| Any text, bio, stats, retirement note, sponsors | `src/data/site.js` |
 | Page structure / section order / layout | `src/pages/index.astro` |
 | Top navigation links | `src/components/Nav.astro` |
 | Site-wide `<head>`, fonts, meta tags | `src/layouts/Base.astro` |
