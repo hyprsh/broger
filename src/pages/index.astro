@@ -265,10 +265,6 @@ const gallery = [
             aria-label={`Bild vergrössern: ${g.alt}`}
           >
             <img src={img(g.src)} alt={g.alt} class="h-full w-full object-cover transition duration-700 group-hover:scale-110" loading="lazy" />
-            <span class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/0 to-ink/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
-            <span class="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 p-4 text-left text-sm font-medium text-snow opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-              {g.alt}
-            </span>
           </button>
         ))}
       </div>
