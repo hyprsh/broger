@@ -65,6 +65,14 @@ h1, h2, h3, h4, .font-display {
   }
 }
 
+/* Win-rate bars grow from 0 when scrolled into view */
+.stat-bar {
+  transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .stat-bar { transition: none; }
+}
+
 /* Lightbox for the gallery */
 .lightbox {
   position: fixed;

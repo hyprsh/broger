@@ -80,7 +80,7 @@ const gallery = [
     <div class="mx-auto grid max-w-6xl grid-cols-2 divide-frost md:grid-cols-4 md:divide-x">
       {highlights.map((h) => (
         <div class="reveal px-5 py-12 text-center">
-          <div class="font-display text-5xl font-bold text-glacier sm:text-6xl">{h.value}</div>
+          <div class="font-display text-5xl font-bold text-glacier sm:text-6xl" data-count={h.value}>{h.value}</div>
           <div class="mt-2 text-xs uppercase tracking-[0.2em] text-ink/55">{h.label}</div>
         </div>
       ))}
@@ -168,7 +168,7 @@ const gallery = [
                     <span class="text-ink/55">{wins} / {starts}</span>
                   </div>
                   <div class="mt-1.5 h-2.5 overflow-hidden rounded-full bg-frost">
-                    <div class="h-full rounded-full bg-glacier" style={`width:${pct}%`}></div>
+                    <div class="stat-bar h-full rounded-full bg-glacier" data-bar={pct} style="width:0%"></div>
                   </div>
                 </div>
               );
@@ -178,7 +178,7 @@ const gallery = [
 
         <div class="reveal flex">
           <div class="flex flex-col justify-center rounded-2xl bg-ink p-8 text-snow">
-            <span class="font-display text-6xl font-bold text-gold">11×</span>
+            <span class="font-display text-6xl font-bold text-gold" data-count="11" data-suffix="×">11×</span>
             <h3 class="mt-3 font-display text-xl font-semibold">König vom Engadin</h3>
             <p class="mt-2 text-snow/75">
               Der jährliche Titel der Credit Suisse / UBS Skikjöring Trophy geht an
@@ -189,6 +189,25 @@ const gallery = [
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ===== PARALLAX DIVIDER ===== -->
+  <section class="relative isolate flex h-[55vh] min-h-[360px] items-center justify-center overflow-hidden">
+    <img
+      src={img('photos/race-1.jpg')}
+      alt=""
+      aria-hidden="true"
+      class="parallax-img -z-10"
+      data-parallax="0.22"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 -z-10 bg-ink/55"></div>
+    <blockquote class="reveal mx-auto max-w-3xl px-6 text-center text-snow">
+      <p class="font-display text-2xl font-medium leading-snug sm:text-4xl">
+        „Der erste Flachländer, der in die Domäne der Engadiner einbrach.“
+      </p>
+      <footer class="mt-5 text-sm uppercase tracking-[0.25em] text-snow/70">White Turf · St. Moritz</footer>
+    </blockquote>
   </section>
 
   <!-- ===== STATISTIK ===== -->
@@ -354,8 +373,54 @@ const gallery = [
   );
   els.forEach((el) => io.observe(el));
 
-  // Parallax: translate oversized images based on their section's viewport position.
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Count-up: animate [data-count] numbers from 0 when they enter view.
+  const countIO = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        const target = parseFloat(el.getAttribute('data-count')) || 0;
+        const suffix = el.getAttribute('data-suffix') || '';
+        countIO.unobserve(el);
+        if (reduceMotion) {
+          el.textContent = target + suffix;
+          return;
+        }
+        const dur = 1300;
+        let startTime = null;
+        const step = (now) => {
+          if (startTime === null) startTime = now;
+          const p = Math.min(1, (now - startTime) / dur);
+          const eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(target * eased) + suffix;
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+    },
+    { threshold: 0.5 }
+  );
+  document.querySelectorAll('[data-count]').forEach((el) => {
+    if (!reduceMotion) el.textContent = '0';
+    countIO.observe(el);
+  });
+
+  // Grow the win-rate bars from 0 to their target width when in view.
+  const barIO = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        e.target.style.width = e.target.getAttribute('data-bar') + '%';
+        barIO.unobserve(e.target);
+      });
+    },
+    { threshold: 0.4 }
+  );
+  document.querySelectorAll('.stat-bar').forEach((el) => barIO.observe(el));
+
+  // Parallax: translate oversized images based on their section's viewport position.
   const layers = [...document.querySelectorAll('[data-parallax]')].map((el) => ({
     el,
     speed: parseFloat(el.getAttribute('data-parallax')) || 0.15,
