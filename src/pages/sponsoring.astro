@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { sponsoring, partners } from '../data/site.js';
+---
+
+<Base title="Sponsoring">
+  <PageHeader title="Sponsoring" lead="Engagement für den Nachwuchs im Pferdesport." />
+
+  <section class="mx-auto max-w-4xl px-5 py-16">
+    <p class="text-lg leading-relaxed text-ink/80">{sponsoring.intro}</p>
+
+    <div class="mt-10 grid gap-5 sm:grid-cols-2">
+      {sponsoring.blocks.map((b) => (
+        <div class="rounded-xl border border-frost bg-white p-6">
+          <h3 class="font-display text-lg font-semibold text-glacier-deep">{b.company}</h3>
+          <p class="mt-2 text-ink/75">{b.supports}</p>
+        </div>
+      ))}
+    </div>
+
+    <h2 class="mt-16 text-xl font-semibold">Partner</h2>
+    <div class="mt-6 grid grid-cols-2 items-center gap-x-8 gap-y-10 rounded-2xl bg-ink p-8 sm:grid-cols-3 md:grid-cols-5">
+      {partners.map((p) => (
+        <a
+          href={p.url}
+          target="_blank"
+          rel="noopener"
+          class="flex items-center justify-center opacity-75 transition hover:opacity-100"
+          title={p.name}
+        >
+          <img
+            src={`/images/logos/${p.logo}`}
+            alt={p.name}
+            class="max-h-12 w-auto object-contain brightness-0 invert"
+            loading="lazy"
+          />
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

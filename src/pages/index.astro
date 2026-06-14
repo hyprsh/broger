@@ -1,0 +1,139 @@
+---
+import Base from '../layouts/Base.astro';
+import { highlights, topHorses, news } from '../data/site.js';
+
+const gallery = [
+  { src: '/images/photos/race-1.jpg', alt: 'Skikjöring-Rennen am White Turf St. Moritz' },
+  { src: '/images/photos/king-george.jpg', alt: 'King George im Vormarsch' },
+  { src: '/images/photos/race-3.jpg', alt: 'Skikjöring auf dem gefrorenen St. Moritzersee' },
+];
+const latest = news.slice(0, 3);
+---
+
+<Base>
+  <!-- Hero -->
+  <section class="relative isolate flex min-h-[78vh] items-end overflow-hidden">
+    <img
+      src="/images/photos/hero.jpg"
+      alt="Jakob Broger beim Skikjöring"
+      class="absolute inset-0 -z-10 h-full w-full object-cover object-center"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/90 via-ink/40 to-ink/20"></div>
+
+    <div class="mx-auto w-full max-w-6xl px-5 pb-14 pt-32 text-snow">
+      <p class="font-display text-sm uppercase tracking-[0.3em] text-snow/80">White Turf · St. Moritz</p>
+      <h1 class="mt-3 max-w-3xl text-4xl font-bold leading-[1.05] sm:text-6xl">
+        Jakob Broger
+      </h1>
+      <p class="mt-4 max-w-xl text-lg text-snow/90 sm:text-xl">
+        24 Saisons Skikjöring auf dem gefrorenen St. Moritzersee — 24 Siege und
+        elf Mal die Krone als <span class="text-gold">König vom Engadin</span>.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a
+          href="/resultate"
+          class="rounded-full bg-glacier px-6 py-3 text-sm font-semibold text-snow transition hover:bg-glacier-deep"
+        >
+          Resultate ansehen
+        </a>
+        <a
+          href="/personalien"
+          class="rounded-full border border-snow/40 px-6 py-3 text-sm font-semibold text-snow transition hover:bg-snow/10"
+        >
+          Zur Person
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Highlights -->
+  <section class="border-b border-frost bg-white">
+    <div class="mx-auto grid max-w-6xl grid-cols-2 divide-x divide-frost md:grid-cols-4">
+      {highlights.map((h) => (
+        <div class="px-5 py-10 text-center">
+          <div class="font-display text-4xl font-bold text-glacier sm:text-5xl">{h.value}</div>
+          <div class="mt-2 text-xs uppercase tracking-widest text-ink/60">{h.label}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Intro -->
+  <section class="mx-auto max-w-3xl px-5 py-20 text-center">
+    <h2 class="text-2xl font-semibold sm:text-3xl">Das Skikjöring</h2>
+    <p class="mt-5 text-lg leading-relaxed text-ink/80">
+      Skikjöring ist die rennsportliche Weltexklusivität von White Turf: Auf Skiern,
+      gezogen von einem ungesattelten Vollblut, jagen die Fahrer über die gefrorene
+      Rennbahn von St. Moritz. Jakob „Köbi“ Broger war in den 1990er-Jahren der erste
+      Flachländer, der in die Domäne der Engadiner einbrach — und prägte den Sport
+      über mehr als zwei Jahrzehnte.
+    </p>
+  </section>
+
+  <!-- Gallery -->
+  <section class="bg-white py-16">
+    <div class="mx-auto max-w-6xl px-5">
+      <div class="flex items-end justify-between">
+        <h2 class="text-2xl font-semibold sm:text-3xl">Impressionen</h2>
+        <a href="/impressionen" class="text-sm font-medium text-glacier hover:text-glacier-deep">
+          Alle ansehen →
+        </a>
+      </div>
+      <div class="mt-8 grid gap-4 sm:grid-cols-3">
+        {gallery.map((g) => (
+          <div class="group overflow-hidden rounded-xl">
+            <img
+              src={g.src}
+              alt={g.alt}
+              class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Top horses -->
+  <section class="mx-auto max-w-6xl px-5 py-20">
+    <h2 class="text-2xl font-semibold sm:text-3xl">Die erfolgreichsten Gespanne</h2>
+    <div class="mt-8 grid gap-5 sm:grid-cols-2">
+      {topHorses.map((h) => (
+        <div class="rounded-xl border border-frost bg-white p-6 transition hover:border-glacier/50 hover:shadow-sm">
+          <div class="flex items-baseline justify-between">
+            <h3 class="text-xl font-semibold">{h.name}</h3>
+            <span class="text-sm text-glacier">{h.years}</span>
+          </div>
+          <p class="mt-2 text-ink/75">{h.note}</p>
+          {h.trainer && (
+            <p class="mt-3 text-sm text-ink/55">
+              Trainer: {h.trainer}{h.owner ? ` · ${h.owner}` : ''}
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- News teaser -->
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-6xl px-5">
+      <div class="flex items-end justify-between">
+        <h2 class="text-2xl font-semibold sm:text-3xl">Aktuelles</h2>
+        <a href="/news" class="text-sm font-medium text-glacier hover:text-glacier-deep">
+          Alle News →
+        </a>
+      </div>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {latest.map((n) => (
+          <a href="/news" class="block rounded-xl border border-frost p-6 transition hover:border-glacier/50">
+            <time class="text-xs uppercase tracking-widest text-glacier">{n.date}</time>
+            <h3 class="mt-2 font-display text-lg font-semibold leading-snug">{n.title}</h3>
+            <p class="mt-3 line-clamp-3 text-sm text-ink/70">{n.body[0]}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

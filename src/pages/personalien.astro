@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { profile, career } from '../data/site.js';
+
+const personal = [
+  { label: 'Name', value: profile.name },
+  { label: 'Wohnort', value: profile.location },
+  { label: 'Geboren', value: profile.born },
+  { label: 'Familie', value: profile.family },
+  { label: 'Beruf', value: profile.job },
+];
+---
+
+<Base title="Personalien">
+  <PageHeader title="Personalien" lead="Zur Person und zum Werdegang von Jakob „Köbi“ Broger." />
+
+  <section class="mx-auto max-w-6xl px-5 py-16">
+    <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
+      <!-- Personal data -->
+      <div>
+        <h2 class="text-xl font-semibold">Persönliches</h2>
+        <dl class="mt-6 divide-y divide-frost rounded-xl border border-frost bg-white">
+          {personal.map((p) => (
+            <div class="flex justify-between gap-4 px-5 py-4">
+              <dt class="text-sm uppercase tracking-wide text-ink/55">{p.label}</dt>
+              <dd class="text-right font-medium">{p.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <img
+          src="/images/photos/race-2.jpg"
+          alt="Jakob Broger beim Skikjöring"
+          class="mt-8 w-full rounded-xl object-cover"
+          loading="lazy"
+        />
+      </div>
+
+      <!-- Career timeline -->
+      <div>
+        <h2 class="text-xl font-semibold">Werdegang im Pferdesport</h2>
+        <ol class="mt-6 space-y-6 border-l-2 border-frost pl-6">
+          {career.map((c) => (
+            <li class="relative">
+              <span class="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full border-2 border-glacier bg-snow"></span>
+              <div class="font-display text-sm font-semibold uppercase tracking-wide text-glacier">
+                {c.period}
+              </div>
+              <div class="mt-1 text-ink/80">{c.text}</div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+</Base>

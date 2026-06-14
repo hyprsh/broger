@@ -1,0 +1,66 @@
+---
+const links = [
+  { href: '/personalien', label: 'Personalien' },
+  { href: '/resultate', label: 'Resultate' },
+  { href: '/statistik', label: 'Statistik' },
+  { href: '/impressionen', label: 'Impressionen' },
+  { href: '/news', label: 'News' },
+  { href: '/sponsoring', label: 'Sponsoring' },
+];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<header class="sticky top-0 z-50 border-b border-frost/80 bg-snow/90 backdrop-blur">
+  <nav class="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
+    <a href="/" class="flex flex-col leading-none">
+      <span class="font-display text-xl font-semibold tracking-wide text-ink">JAKOB BROGER</span>
+      <span class="text-[0.7rem] uppercase tracking-[0.25em] text-glacier">Skikjöringfahrer</span>
+    </a>
+
+    <button
+      id="nav-toggle"
+      class="md:hidden inline-flex h-10 w-10 items-center justify-center rounded text-ink"
+      aria-label="Menü"
+      aria-expanded="false"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 6h18M3 12h18M3 18h18" />
+      </svg>
+    </button>
+
+    <ul id="nav-links" class="hidden md:flex items-center gap-7 text-sm font-medium">
+      {links.map((l) => (
+        <li>
+          <a
+            href={l.href}
+            class:list={[
+              'transition-colors hover:text-glacier',
+              path === l.href ? 'text-glacier' : 'text-ink/80',
+            ]}
+          >
+            {l.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <ul id="nav-mobile" class="hidden border-t border-frost bg-snow px-5 py-3 md:hidden">
+    {links.map((l) => (
+      <li class="py-2">
+        <a href={l.href} class:list={['block text-base', path === l.href ? 'text-glacier' : 'text-ink/80']}>
+          {l.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</header>
+
+<script>
+  const btn = document.getElementById('nav-toggle');
+  const menu = document.getElementById('nav-mobile');
+  btn?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('hidden');
+    btn.setAttribute('aria-expanded', String(open === false));
+  });
+</script>

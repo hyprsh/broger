@@ -1,0 +1,36 @@
+---
+import { partners } from '../data/site.js';
+const year = 2026;
+---
+
+<footer class="mt-24 border-t border-frost bg-ink text-snow">
+  <div class="mx-auto max-w-6xl px-5 py-12">
+    <h2 class="text-center font-display text-sm uppercase tracking-[0.25em] text-snow/60">
+      Partner &amp; Sponsoren
+    </h2>
+    <div class="mt-8 grid grid-cols-2 items-center gap-x-8 gap-y-10 sm:grid-cols-3 md:grid-cols-5">
+      {partners.map((p) => (
+        <a
+          href={p.url}
+          target="_blank"
+          rel="noopener"
+          class="flex items-center justify-center opacity-70 transition hover:opacity-100"
+          title={p.name}
+        >
+          <img
+            src={`/images/logos/${p.logo}`}
+            alt={p.name}
+            class="max-h-12 w-auto object-contain brightness-0 invert"
+            loading="lazy"
+          />
+        </a>
+      ))}
+    </div>
+
+    <div class="mt-12 flex flex-col items-center gap-2 border-t border-white/10 pt-8 text-center text-sm text-snow/60">
+      <p class="font-display text-base tracking-wide text-snow/90">Jakob (Köbi) Broger</p>
+      <p>8602 Wangen/ZH, Schweiz</p>
+      <p class="mt-2 text-xs">© {year} Jakob Broger · Skikjöringfahrer</p>
+    </div>
+  </div>
+</footer>
