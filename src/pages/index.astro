@@ -45,11 +45,13 @@ const gallery = [
       alt="Jakob Broger beim Skikjöring am White Turf St. Moritz"
       class="parallax-img -z-10 object-center"
       data-parallax="0.18"
+      data-zoom="0.14"
+      data-pointer="22"
       fetchpriority="high"
     />
     <div class="absolute inset-0 -z-10 bg-gradient-to-b from-ink/70 via-ink/45 to-ink/85"></div>
 
-    <div class="mx-auto w-full max-w-6xl px-5 pt-24 text-snow">
+    <div class="mx-auto w-full max-w-6xl px-5 pt-24 text-snow" data-parallax="-0.16" data-fade data-pointer="-9">
       <p class="font-display text-sm uppercase tracking-[0.4em] text-snow/80">White Turf · St. Moritz</p>
       <h1 class="mt-4 text-5xl font-bold leading-[0.95] sm:text-7xl lg:text-8xl">
         Jakob<br /><span class="text-gold">Broger</span>
@@ -95,6 +97,7 @@ const gallery = [
       aria-hidden="true"
       class="parallax-img -z-10 opacity-25"
       data-parallax="0.14"
+      data-zoom="0.1"
       loading="lazy"
     />
     <div class="absolute inset-0 -z-10 bg-gradient-to-b from-ink via-ink/85 to-ink"></div>
@@ -222,15 +225,18 @@ const gallery = [
       aria-hidden="true"
       class="parallax-img -z-10"
       data-parallax="0.22"
+      data-zoom="0.12"
       loading="lazy"
     />
     <div class="absolute inset-0 -z-10 bg-ink/55"></div>
-    <blockquote class="reveal mx-auto max-w-3xl px-6 text-center text-snow">
-      <p class="font-display text-2xl font-medium leading-snug sm:text-4xl">
-        „Der erste Flachländer, der in die Domäne der Engadiner einbrach.“
-      </p>
-      <footer class="mt-5 text-sm uppercase tracking-[0.25em] text-snow/70">White Turf · St. Moritz</footer>
-    </blockquote>
+    <div data-parallax="-0.12">
+      <blockquote class="reveal mx-auto max-w-3xl px-6 text-center text-snow">
+        <p class="font-display text-2xl font-medium leading-snug sm:text-4xl">
+          „Der erste Flachländer, der in die Domäne der Engadiner einbrach.“
+        </p>
+        <footer class="mt-5 text-sm uppercase tracking-[0.25em] text-snow/70">White Turf · St. Moritz</footer>
+      </blockquote>
+    </div>
   </section>
 
   <!-- ===== STATISTIK ===== -->
@@ -416,33 +422,67 @@ const gallery = [
   );
   document.querySelectorAll('.stat-bar').forEach((el) => barIO.observe(el));
 
-  // Parallax: translate oversized images based on their section's viewport position.
+  // Parallax engine: per-layer vertical drift, scroll-zoom, fade, and (on the
+  // hero) pointer tracking — composed into one transform per element.
   const layers = [...document.querySelectorAll('[data-parallax]')].map((el) => ({
     el,
-    speed: parseFloat(el.getAttribute('data-parallax')) || 0.15,
+    speed: parseFloat(el.getAttribute('data-parallax')) || 0,
+    zoom: parseFloat(el.getAttribute('data-zoom')) || 0,
+    fade: el.hasAttribute('data-fade'),
+    pointer: parseFloat(el.getAttribute('data-pointer')) || 0,
     section: el.closest('section') || el.parentElement,
   }));
+  const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const hero = document.getElementById('top');
+  let pointerX = 0; // -1..1 relative to hero center
+  let pointerY = 0;
   let ticking = false;
-  const updateParallax = () => {
+
+  const render = () => {
     const vh = window.innerHeight;
-    for (const { el, speed, section } of layers) {
-      const rect = section.getBoundingClientRect();
-      if (rect.bottom < -100 || rect.top > vh + 100) continue; // skip offscreen
-      const offset = rect.top + rect.height / 2 - vh / 2;
-      el.style.transform = `translate3d(0, ${(-offset * speed).toFixed(1)}px, 0)`;
+    for (const L of layers) {
+      const rect = L.section.getBoundingClientRect();
+      if (rect.bottom < -200 || rect.top > vh + 200) continue; // skip offscreen
+      const center = rect.top + rect.height / 2 - vh / 2;
+      const prog = center / vh; // ~0 when centered, ±1 near edges
+      let x = 0;
+      let y = -center * L.speed;
+      if (L.pointer) {
+        x += pointerX * L.pointer;
+        y += pointerY * L.pointer * 0.55;
+      }
+      let t = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+      if (L.zoom) t += ` scale(${(1 + Math.min(Math.abs(prog), 1) * L.zoom).toFixed(3)})`;
+      L.el.style.transform = t;
+      if (L.fade) L.el.style.opacity = Math.max(0, 1 - Math.abs(prog) * 1.5).toFixed(3);
     }
     ticking = false;
   };
+  const schedule = () => {
+    if (!ticking) {
+      requestAnimationFrame(render);
+      ticking = true;
+    }
+  };
+
   if (!reduceMotion && layers.length) {
-    const onScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(updateParallax);
-        ticking = true;
-      }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', updateParallax);
-    updateParallax();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', render);
+    // Pointer parallax on the hero (desktop / fine-pointer only).
+    if (fine && hero) {
+      hero.addEventListener('pointermove', (e) => {
+        const r = hero.getBoundingClientRect();
+        pointerX = ((e.clientX - r.left) / r.width - 0.5) * 2;
+        pointerY = ((e.clientY - r.top) / r.height - 0.5) * 2;
+        schedule();
+      });
+      hero.addEventListener('pointerleave', () => {
+        pointerX = 0;
+        pointerY = 0;
+        schedule();
+      });
+    }
+    render();
   }
 
   // Lightbox: click a gallery tile to view the photo full-size.
