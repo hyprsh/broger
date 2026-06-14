@@ -1,12 +1,10 @@
 ---
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
-import Footer from '../components/Footer.astro';
 
-const { title, description } = Astro.props;
-const fullTitle = title ? `${title} · Jakob Broger` : 'Jakob Broger · Skikjöringfahrer';
+const base = import.meta.env.BASE_URL;
+const title = 'Jakob Broger · Skikjöringfahrer';
 const desc =
-  description ??
   'Jakob (Köbi) Broger — Skikjöringfahrer am White Turf St. Moritz. 24 Siege, 11 Mal König vom Engadin.';
 ---
 
@@ -15,13 +13,14 @@ const desc =
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{fullTitle}</title>
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <title>{title}</title>
     <meta name="description" content={desc} />
-    <meta property="og:title" content={fullTitle} />
+    <meta property="og:title" content={title} />
     <meta property="og:description" content={desc} />
-    <meta property="og:image" content="/images/photos/hero.jpg" />
+    <meta property="og:image" content={`${base}images/photos/hero.jpg`} />
     <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0b1220" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -34,6 +33,5 @@ const desc =
     <main>
       <slot />
     </main>
-    <Footer />
   </body>
 </html>

@@ -1,139 +1,318 @@
 ---
 import Base from '../layouts/Base.astro';
-import { highlights, topHorses, news } from '../data/site.js';
+import {
+  profile,
+  career,
+  highlights,
+  stats,
+  topHorses,
+  sponsoring,
+  partners,
+  news,
+} from '../data/site.js';
+
+const base = import.meta.env.BASE_URL;
+const img = (p) => `${base}images/${p}`;
+
+const personal = [
+  { label: 'Wohnort', value: profile.location },
+  { label: 'Geboren', value: profile.born },
+  { label: 'Familie', value: profile.family },
+  { label: 'Beruf', value: profile.job },
+];
+
+const ranked = [...stats.rows]
+  .filter((r) => Number(r[2]) > 0)
+  .sort((a, b) => Number(b[2]) - Number(a[2]));
 
 const gallery = [
-  { src: '/images/photos/race-1.jpg', alt: 'Skikjöring-Rennen am White Turf St. Moritz' },
-  { src: '/images/photos/king-george.jpg', alt: 'King George im Vormarsch' },
-  { src: '/images/photos/race-3.jpg', alt: 'Skikjöring auf dem gefrorenen St. Moritzersee' },
+  { src: 'photos/king-george.jpg', alt: 'King George im Vormarsch', big: true },
+  { src: 'photos/race-1.jpg', alt: 'Skikjöring-Rennen am White Turf' },
+  { src: 'photos/race-3.jpg', alt: 'Auf dem gefrorenen St. Moritzersee' },
+  { src: 'photos/race-2.jpg', alt: 'Skikjöring in voller Fahrt' },
+  { src: 'photos/race-4.jpg', alt: 'Rennszene am White Turf' },
+  { src: 'photos/race-5.jpg', alt: 'Skikjöring St. Moritz' },
 ];
-const latest = news.slice(0, 3);
 ---
 
 <Base>
-  <!-- Hero -->
-  <section class="relative isolate flex min-h-[78vh] items-end overflow-hidden">
+  <!-- ===== HERO ===== -->
+  <section id="top" class="relative isolate flex min-h-screen items-center overflow-hidden">
     <img
-      src="/images/photos/hero.jpg"
-      alt="Jakob Broger beim Skikjöring"
-      class="absolute inset-0 -z-10 h-full w-full object-cover object-center"
+      src={img('photos/hero.jpg')}
+      alt="Jakob Broger beim Skikjöring am White Turf St. Moritz"
+      class="kenburns absolute inset-0 -z-10 h-full w-full object-cover object-center"
       fetchpriority="high"
     />
-    <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/90 via-ink/40 to-ink/20"></div>
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-ink/70 via-ink/45 to-ink/85"></div>
 
-    <div class="mx-auto w-full max-w-6xl px-5 pb-14 pt-32 text-snow">
-      <p class="font-display text-sm uppercase tracking-[0.3em] text-snow/80">White Turf · St. Moritz</p>
-      <h1 class="mt-3 max-w-3xl text-4xl font-bold leading-[1.05] sm:text-6xl">
-        Jakob Broger
+    <div class="mx-auto w-full max-w-6xl px-5 pt-24 text-snow">
+      <p class="font-display text-sm uppercase tracking-[0.4em] text-snow/80">White Turf · St. Moritz</p>
+      <h1 class="mt-4 text-5xl font-bold leading-[0.95] sm:text-7xl lg:text-8xl">
+        Jakob<br /><span class="text-gold">Broger</span>
       </h1>
-      <p class="mt-4 max-w-xl text-lg text-snow/90 sm:text-xl">
+      <p class="mt-6 max-w-xl text-lg text-snow/90 sm:text-xl">
         24 Saisons Skikjöring auf dem gefrorenen St. Moritzersee — 24 Siege und
-        elf Mal die Krone als <span class="text-gold">König vom Engadin</span>.
+        elf Mal die Krone als König vom Engadin.
       </p>
-      <div class="mt-8 flex flex-wrap gap-4">
-        <a
-          href="/resultate"
-          class="rounded-full bg-glacier px-6 py-3 text-sm font-semibold text-snow transition hover:bg-glacier-deep"
-        >
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a href="#resultate" class="rounded-full bg-glacier px-7 py-3.5 text-sm font-semibold text-snow shadow-lg shadow-glacier/30 transition hover:bg-glacier-deep">
           Resultate ansehen
         </a>
-        <a
-          href="/personalien"
-          class="rounded-full border border-snow/40 px-6 py-3 text-sm font-semibold text-snow transition hover:bg-snow/10"
-        >
+        <a href="#person" class="rounded-full border border-snow/40 px-7 py-3.5 text-sm font-semibold text-snow backdrop-blur-sm transition hover:bg-snow/10">
           Zur Person
         </a>
       </div>
     </div>
+
+    <a href="#zahlen" aria-label="Nach unten scrollen" class="absolute bottom-7 left-1/2 -translate-x-1/2 text-snow/70 transition hover:text-snow">
+      <svg class="h-7 w-7 animate-bounce" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 5v14M19 12l-7 7-7-7" />
+      </svg>
+    </a>
   </section>
 
-  <!-- Highlights -->
-  <section class="border-b border-frost bg-white">
-    <div class="mx-auto grid max-w-6xl grid-cols-2 divide-x divide-frost md:grid-cols-4">
+  <!-- ===== STATS BAND ===== -->
+  <section id="zahlen" class="border-y border-frost bg-white">
+    <div class="mx-auto grid max-w-6xl grid-cols-2 divide-frost md:grid-cols-4 md:divide-x">
       {highlights.map((h) => (
-        <div class="px-5 py-10 text-center">
-          <div class="font-display text-4xl font-bold text-glacier sm:text-5xl">{h.value}</div>
-          <div class="mt-2 text-xs uppercase tracking-widest text-ink/60">{h.label}</div>
+        <div class="reveal px-5 py-12 text-center">
+          <div class="font-display text-5xl font-bold text-glacier sm:text-6xl">{h.value}</div>
+          <div class="mt-2 text-xs uppercase tracking-[0.2em] text-ink/55">{h.label}</div>
         </div>
       ))}
     </div>
   </section>
 
-  <!-- Intro -->
-  <section class="mx-auto max-w-3xl px-5 py-20 text-center">
-    <h2 class="text-2xl font-semibold sm:text-3xl">Das Skikjöring</h2>
-    <p class="mt-5 text-lg leading-relaxed text-ink/80">
-      Skikjöring ist die rennsportliche Weltexklusivität von White Turf: Auf Skiern,
-      gezogen von einem ungesattelten Vollblut, jagen die Fahrer über die gefrorene
-      Rennbahn von St. Moritz. Jakob „Köbi“ Broger war in den 1990er-Jahren der erste
-      Flachländer, der in die Domäne der Engadiner einbrach — und prägte den Sport
-      über mehr als zwei Jahrzehnte.
-    </p>
+  <!-- ===== PERSON ===== -->
+  <section id="person" class="mx-auto max-w-6xl scroll-mt-20 px-5 py-24">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <p class="font-display text-xs uppercase tracking-[0.3em] text-glacier">Personalien</p>
+      <h2 class="mt-3 text-3xl font-bold sm:text-5xl">Der erste Flachländer auf dem Eis</h2>
+      <p class="mt-5 text-lg leading-relaxed text-ink/75">
+        In den 1990er-Jahren brach Jakob „Köbi“ Broger als erster Flachländer in
+        die Domäne der Engadiner ein — und prägte das Skikjöring über mehr als
+        zwei Jahrzehnte.
+      </p>
+    </div>
+
+    <div class="mt-14 grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+      <div class="reveal">
+        <img src={img('photos/race-2.jpg')} alt="Jakob Broger beim Skikjöring" class="aspect-[4/5] w-full rounded-2xl object-cover shadow-sm" loading="lazy" />
+        <dl class="mt-6 grid grid-cols-2 gap-3">
+          {personal.map((p) => (
+            <div class="rounded-xl border border-frost bg-white px-4 py-3">
+              <dt class="text-[0.7rem] uppercase tracking-wide text-ink/50">{p.label}</dt>
+              <dd class="mt-0.5 font-medium">{p.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <div class="reveal">
+        <h3 class="font-display text-lg font-semibold uppercase tracking-wide text-ink/80">Werdegang im Pferdesport</h3>
+        <ol class="mt-6 space-y-6 border-l-2 border-frost pl-6">
+          {career.map((c) => (
+            <li class="relative">
+              <span class="absolute -left-[31px] top-1.5 h-3 w-3 rounded-full border-2 border-glacier bg-snow"></span>
+              <div class="font-display text-sm font-semibold uppercase tracking-wide text-glacier">{c.period}</div>
+              <div class="mt-1 text-ink/80">{c.text}</div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
   </section>
 
-  <!-- Gallery -->
-  <section class="bg-white py-16">
+  <!-- ===== RESULTATE ===== -->
+  <section id="resultate" class="scroll-mt-16 bg-white py-24">
     <div class="mx-auto max-w-6xl px-5">
-      <div class="flex items-end justify-between">
-        <h2 class="text-2xl font-semibold sm:text-3xl">Impressionen</h2>
-        <a href="/impressionen" class="text-sm font-medium text-glacier hover:text-glacier-deep">
-          Alle ansehen →
-        </a>
+      <div class="reveal max-w-2xl">
+        <p class="font-display text-xs uppercase tracking-[0.3em] text-glacier">Resultate</p>
+        <h2 class="mt-3 text-3xl font-bold sm:text-5xl">Die erfolgreichsten Gespanne</h2>
+        <p class="mt-4 text-lg text-ink/70">Karriere-Übersicht 1996–2022.</p>
       </div>
-      <div class="mt-8 grid gap-4 sm:grid-cols-3">
+
+      <div class="mt-12 grid gap-5 sm:grid-cols-2">
+        {topHorses.map((h) => (
+          <div class="reveal rounded-2xl border border-frost bg-snow p-6 transition hover:border-glacier/40 hover:shadow-sm">
+            <div class="flex items-baseline justify-between">
+              <h3 class="text-xl font-semibold">{h.name}</h3>
+              <span class="text-sm text-glacier">{h.years}</span>
+            </div>
+            <p class="mt-2 text-ink/75">{h.note}</p>
+            {(h.trainer || h.owner) && (
+              <p class="mt-3 text-sm text-ink/55">
+                {h.owner}{h.owner && h.trainer ? ' · ' : ''}{h.trainer && `Trainer ${h.trainer}`}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-12 grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+        <div class="reveal">
+          <h3 class="font-display text-lg font-semibold uppercase tracking-wide text-ink/80">Siege nach Pferd</h3>
+          <div class="mt-5 space-y-3">
+            {ranked.map((r) => {
+              const wins = Number(r[2]);
+              const starts = Number(r[1]);
+              const pct = Math.round((wins / starts) * 100);
+              return (
+                <div>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="font-medium">{r[0]}</span>
+                    <span class="text-ink/55">{wins} / {starts}</span>
+                  </div>
+                  <div class="mt-1.5 h-2.5 overflow-hidden rounded-full bg-frost">
+                    <div class="h-full rounded-full bg-glacier" style={`width:${pct}%`}></div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div class="reveal flex">
+          <div class="flex flex-col justify-center rounded-2xl bg-ink p-8 text-snow">
+            <span class="font-display text-6xl font-bold text-gold">11×</span>
+            <h3 class="mt-3 font-display text-xl font-semibold">König vom Engadin</h3>
+            <p class="mt-2 text-snow/75">
+              Der jährliche Titel der Credit Suisse / UBS Skikjöring Trophy geht an
+              den erfolgreichsten Fahrer der Saison. Köbi Broger gewann die Krone
+              elf Mal — ein bis heute prägender Rekord am White Turf.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STATISTIK ===== -->
+  <section id="statistik" class="mx-auto max-w-6xl scroll-mt-16 px-5 py-24">
+    <div class="reveal max-w-2xl">
+      <p class="font-display text-xs uppercase tracking-[0.3em] text-glacier">Statistik</p>
+      <h2 class="mt-3 text-3xl font-bold sm:text-5xl">Alle Starts, 1996–2022</h2>
+      <p class="mt-4 text-lg text-ink/70">61 Starts · 24 Siege · 11 Titel.</p>
+    </div>
+
+    <div class="reveal mt-10 overflow-x-auto rounded-2xl border border-frost bg-white">
+      <table class="w-full min-w-[640px] text-sm">
+        <thead>
+          <tr class="bg-ink text-snow">
+            {stats.columns.map((c, i) => (
+              <th class:list={['px-4 py-3 font-display font-medium uppercase tracking-wide', i === 0 ? 'text-left' : 'text-center']}>{c}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-frost">
+          {stats.rows.map((row) => (
+            <tr class="transition hover:bg-snow">
+              {row.map((cell, i) => (
+                <td class:list={['px-4 py-3', i === 0 ? 'text-left font-medium' : 'text-center', i === 2 && cell ? 'font-semibold text-glacier' : '']}>{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr class="border-t-2 border-ink bg-frost/40 font-display font-semibold">
+            {stats.total.map((cell, i) => (
+              <td class:list={['px-4 py-3', i === 0 ? 'text-left' : 'text-center']}>{cell}</td>
+            ))}
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===== IMPRESSIONEN ===== -->
+  <section id="impressionen" class="scroll-mt-16 bg-white py-24">
+    <div class="mx-auto max-w-6xl px-5">
+      <div class="reveal max-w-2xl">
+        <p class="font-display text-xs uppercase tracking-[0.3em] text-glacier">Impressionen</p>
+        <h2 class="mt-3 text-3xl font-bold sm:text-5xl">Bilder vom Eis</h2>
+      </div>
+      <div class="mt-10 grid auto-rows-[200px] grid-cols-2 gap-4 md:grid-cols-4">
         {gallery.map((g) => (
-          <div class="group overflow-hidden rounded-xl">
-            <img
-              src={g.src}
-              alt={g.alt}
-              class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"
-              loading="lazy"
-            />
+          <figure class:list={['reveal group overflow-hidden rounded-2xl', g.big ? 'col-span-2 row-span-2' : '']}>
+            <img src={img(g.src)} alt={g.alt} class="h-full w-full object-cover transition duration-700 group-hover:scale-105" loading="lazy" />
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== NEWS ===== -->
+  <section id="news" class="mx-auto max-w-3xl scroll-mt-16 px-5 py-24">
+    <div class="reveal">
+      <p class="font-display text-xs uppercase tracking-[0.3em] text-glacier">News</p>
+      <h2 class="mt-3 text-3xl font-bold sm:text-5xl">Aktuelles &amp; Rückblicke</h2>
+    </div>
+    <div class="mt-12 space-y-12">
+      {news.map((n) => (
+        <article class="reveal border-b border-frost pb-12 last:border-0">
+          <time class="font-display text-xs uppercase tracking-[0.25em] text-glacier">{n.date}</time>
+          <h3 class="mt-2 text-2xl font-semibold leading-snug">{n.title}</h3>
+          <div class="mt-4 space-y-4 leading-relaxed text-ink/80">
+            {n.body.map((p) => <p>{p}</p>)}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- ===== SPONSORING ===== -->
+  <section id="sponsoring" class="scroll-mt-16 bg-white py-24">
+    <div class="mx-auto max-w-4xl px-5">
+      <div class="reveal max-w-2xl">
+        <p class="font-display text-xs uppercase tracking-[0.3em] text-glacier">Sponsoring</p>
+        <h2 class="mt-3 text-3xl font-bold sm:text-5xl">Engagement für den Nachwuchs</h2>
+        <p class="mt-5 text-lg leading-relaxed text-ink/75">{sponsoring.intro}</p>
+      </div>
+      <div class="reveal mt-10 grid gap-5 sm:grid-cols-2">
+        {sponsoring.blocks.map((b) => (
+          <div class="rounded-2xl border border-frost bg-snow p-6">
+            <h3 class="font-display text-lg font-semibold text-glacier-deep">{b.company}</h3>
+            <p class="mt-2 text-ink/75">{b.supports}</p>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- Top horses -->
-  <section class="mx-auto max-w-6xl px-5 py-20">
-    <h2 class="text-2xl font-semibold sm:text-3xl">Die erfolgreichsten Gespanne</h2>
-    <div class="mt-8 grid gap-5 sm:grid-cols-2">
-      {topHorses.map((h) => (
-        <div class="rounded-xl border border-frost bg-white p-6 transition hover:border-glacier/50 hover:shadow-sm">
-          <div class="flex items-baseline justify-between">
-            <h3 class="text-xl font-semibold">{h.name}</h3>
-            <span class="text-sm text-glacier">{h.years}</span>
-          </div>
-          <p class="mt-2 text-ink/75">{h.note}</p>
-          {h.trainer && (
-            <p class="mt-3 text-sm text-ink/55">
-              Trainer: {h.trainer}{h.owner ? ` · ${h.owner}` : ''}
-            </p>
-          )}
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- News teaser -->
-  <section class="bg-white py-20">
-    <div class="mx-auto max-w-6xl px-5">
-      <div class="flex items-end justify-between">
-        <h2 class="text-2xl font-semibold sm:text-3xl">Aktuelles</h2>
-        <a href="/news" class="text-sm font-medium text-glacier hover:text-glacier-deep">
-          Alle News →
-        </a>
-      </div>
-      <div class="mt-8 grid gap-6 md:grid-cols-3">
-        {latest.map((n) => (
-          <a href="/news" class="block rounded-xl border border-frost p-6 transition hover:border-glacier/50">
-            <time class="text-xs uppercase tracking-widest text-glacier">{n.date}</time>
-            <h3 class="mt-2 font-display text-lg font-semibold leading-snug">{n.title}</h3>
-            <p class="mt-3 line-clamp-3 text-sm text-ink/70">{n.body[0]}</p>
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-ink text-snow">
+    <div class="mx-auto max-w-6xl px-5 py-16">
+      <h2 class="text-center font-display text-sm uppercase tracking-[0.25em] text-snow/60">Partner &amp; Sponsoren</h2>
+      <div class="mt-10 grid grid-cols-2 items-center gap-x-8 gap-y-10 sm:grid-cols-3 md:grid-cols-5">
+        {partners.map((p) => (
+          <a href={p.url} target="_blank" rel="noopener" title={p.name} class="flex items-center justify-center opacity-70 transition hover:opacity-100">
+            <img src={img(`logos/${p.logo}`)} alt={p.name} class="max-h-12 w-auto object-contain brightness-0 invert" loading="lazy" />
           </a>
         ))}
       </div>
+      <div class="mt-14 flex flex-col items-center gap-1 border-t border-white/10 pt-8 text-center text-sm text-snow/60">
+        <p class="font-display text-base tracking-wide text-snow/90">Jakob (Köbi) Broger</p>
+        <p>{profile.location}</p>
+        <p class="mt-2 text-xs">© 2026 Jakob Broger · Skikjöringfahrer</p>
+      </div>
     </div>
-  </section>
+  </footer>
 </Base>
+
+<script>
+  // Reveal sections as they scroll into view.
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    },
+    { rootMargin: '0px 0px -10% 0px', threshold: 0.05 }
+  );
+  els.forEach((el) => io.observe(el));
+</script>

@@ -1,25 +1,29 @@
 ---
+const base = import.meta.env.BASE_URL;
 const links = [
-  { href: '/personalien', label: 'Personalien' },
-  { href: '/resultate', label: 'Resultate' },
-  { href: '/statistik', label: 'Statistik' },
-  { href: '/impressionen', label: 'Impressionen' },
-  { href: '/news', label: 'News' },
-  { href: '/sponsoring', label: 'Sponsoring' },
+  { href: '#person', label: 'Person' },
+  { href: '#resultate', label: 'Resultate' },
+  { href: '#statistik', label: 'Statistik' },
+  { href: '#impressionen', label: 'Impressionen' },
+  { href: '#news', label: 'News' },
+  { href: '#sponsoring', label: 'Sponsoring' },
 ];
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
-<header class="sticky top-0 z-50 border-b border-frost/80 bg-snow/90 backdrop-blur">
+<header
+  id="site-nav"
+  class="fixed inset-x-0 top-0 z-50 border-b border-transparent transition-colors duration-300"
+  data-at-top="true"
+>
   <nav class="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
-    <a href="/" class="flex flex-col leading-none">
-      <span class="font-display text-xl font-semibold tracking-wide text-ink">JAKOB BROGER</span>
-      <span class="text-[0.7rem] uppercase tracking-[0.25em] text-glacier">Skikjöringfahrer</span>
+    <a href={base} class="flex flex-col leading-none">
+      <span class="nav-title font-display text-xl font-semibold tracking-wide transition-colors">JAKOB BROGER</span>
+      <span class="nav-sub text-[0.7rem] uppercase tracking-[0.25em] transition-colors">Skikjöringfahrer</span>
     </a>
 
     <button
       id="nav-toggle"
-      class="md:hidden inline-flex h-10 w-10 items-center justify-center rounded text-ink"
+      class="md:hidden nav-title inline-flex h-10 w-10 items-center justify-center rounded"
       aria-label="Menü"
       aria-expanded="false"
     >
@@ -28,16 +32,10 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
       </svg>
     </button>
 
-    <ul id="nav-links" class="hidden md:flex items-center gap-7 text-sm font-medium">
+    <ul class="hidden items-center gap-7 text-sm font-medium md:flex">
       {links.map((l) => (
         <li>
-          <a
-            href={l.href}
-            class:list={[
-              'transition-colors hover:text-glacier',
-              path === l.href ? 'text-glacier' : 'text-ink/80',
-            ]}
-          >
+          <a href={l.href} data-spy={l.href} class="nav-link nav-title transition-colors hover:opacity-70">
             {l.label}
           </a>
         </li>
@@ -48,19 +46,60 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
   <ul id="nav-mobile" class="hidden border-t border-frost bg-snow px-5 py-3 md:hidden">
     {links.map((l) => (
       <li class="py-2">
-        <a href={l.href} class:list={['block text-base', path === l.href ? 'text-glacier' : 'text-ink/80']}>
-          {l.label}
-        </a>
+        <a href={l.href} class="block text-base text-ink/80">{l.label}</a>
       </li>
     ))}
   </ul>
 </header>
 
+<style>
+  /* At top of page (over hero): white text. After scroll: solid bar, dark text. */
+  #site-nav[data-at-top='true'] .nav-title { color: #fff; }
+  #site-nav[data-at-top='true'] .nav-sub { color: rgba(255, 255, 255, 0.85); }
+  #site-nav[data-at-top='false'] {
+    background: color-mix(in srgb, var(--color-snow) 92%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom-color: var(--color-frost);
+  }
+  #site-nav[data-at-top='false'] .nav-title { color: var(--color-ink); }
+  #site-nav[data-at-top='false'] .nav-sub { color: var(--color-glacier); }
+  .nav-link.active { color: var(--color-glacier) !important; }
+  #site-nav[data-at-top='true'] .nav-link.active { color: var(--color-gold) !important; }
+</style>
+
 <script>
-  const btn = document.getElementById('nav-toggle');
-  const menu = document.getElementById('nav-mobile');
-  btn?.addEventListener('click', () => {
-    const open = menu?.classList.toggle('hidden');
-    btn.setAttribute('aria-expanded', String(open === false));
+  const nav = document.getElementById('site-nav');
+  const toggle = document.getElementById('nav-toggle');
+  const mobile = document.getElementById('nav-mobile');
+
+  // Solid bar after scrolling past the hero.
+  const onScroll = () => nav?.setAttribute('data-at-top', String(window.scrollY < 60));
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  toggle?.addEventListener('click', () => {
+    const open = mobile?.classList.toggle('hidden');
+    toggle.setAttribute('aria-expanded', String(open === false));
   });
+  mobile?.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => mobile.classList.add('hidden'))
+  );
+
+  // Scroll-spy: highlight the nav link for the section in view.
+  const spyLinks = document.querySelectorAll('.nav-link[data-spy]');
+  const sections = [...spyLinks]
+    .map((l) => document.querySelector(l.getAttribute('data-spy')))
+    .filter(Boolean);
+  const spy = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        spyLinks.forEach((l) =>
+          l.classList.toggle('active', l.getAttribute('data-spy') === '#' + e.target.id)
+        );
+      });
+    },
+    { rootMargin: '-45% 0px -50% 0px' }
+  );
+  sections.forEach((s) => spy.observe(s));
 </script>
