@@ -30,8 +30,12 @@ Sag Codex einfach in normaler Sprache, was geändert werden soll.
 6. Sende danach zum Start zum Beispiel diese Nachricht:
 
    ```text
-   Lies die Anweisungen und sag mir danach, was diese Website ist und wie du sie aktualisieren würdest.
+   Lies die Anweisungen, prüfe ob Node.js und npm auf diesem Computer bereit sind, installiere die Projekt-Abhängigkeiten und sag mir danach, was diese Website ist und wie du sie aktualisieren würdest.
    ```
+
+Codex soll die lokale Einrichtung automatisch erledigen. Falls auf deinem
+Computer noch etwas fehlt, zum Beispiel Node.js, soll Codex dir genau sagen, was
+du installieren musst.
 
 ## Änderungen beauftragen
 

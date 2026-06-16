@@ -27,6 +27,16 @@ branch. The site language is **German** — keep all visitor-facing text in Germ
 
 ## 1. Reconstruct the dev environment
 
+On a fresh clone, proactively prepare the local computer before making or
+previewing changes:
+
+1. Run `node --version` and confirm Node.js is version 22 or newer.
+2. Run `npm --version` to confirm npm is available.
+3. Run `npm install` from the project root to install dependencies.
+4. If Node.js or npm is missing or too old, explain the exact manual install step
+   the non-technical owner needs before continuing. Do not ask them to choose
+   between technical setup options unless there is no safe default.
+
 Requirements: **Node.js 22+** and **npm** (Node ships with npm). Check with
 `node --version`. If Node is missing, install it from <https://nodejs.org> (LTS)
 or via a version manager (`nvm install 22`).
