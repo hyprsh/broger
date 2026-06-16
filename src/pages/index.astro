@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { Image, getImage } from 'astro:assets';
 import {
   profile,
   career,
@@ -12,7 +13,11 @@ import {
 } from '../data/site.js';
 
 const base = import.meta.env.BASE_URL;
-const img = (p) => `${base}images/${p}`;
+const logo = (p) => `${base}images/logos/${p}`; // logos stay in public/
+
+// Photos live in src/assets/photos and are optimized by Astro at build time.
+const photoMods = import.meta.glob('../assets/photos/*.jpg', { eager: true, import: 'default' });
+const photo = (name) => photoMods[`../assets/photos/${name}`];
 
 const personal = [
   { label: 'Wohnort', value: profile.location },
@@ -27,27 +32,36 @@ const ranked = [...stats.rows]
 
 // Editorial collage — `cls` controls the grid span of each tile (4-col grid).
 const gallery = [
-  { src: 'photos/king-george.jpg', alt: 'King George im Vormarsch', cls: 'col-span-2 row-span-2' },
-  { src: 'photos/race-1.jpg', alt: 'Skikjöring-Rennen am White Turf', cls: 'col-span-2' },
-  { src: 'photos/race-3.jpg', alt: 'Auf dem gefrorenen St. Moritzersee', cls: '' },
-  { src: 'photos/race-4.jpg', alt: 'Rennszene am White Turf', cls: '' },
-  { src: 'photos/race-2.jpg', alt: 'Skikjöring in voller Fahrt', cls: '' },
-  { src: 'photos/race-5.jpg', alt: 'Skikjöring St. Moritz', cls: '' },
-  { src: 'photos/hero.jpg', alt: 'Jakob Broger im Rennen', cls: 'col-span-2' },
+  { name: 'king-george.jpg', alt: 'King George im Vormarsch', cls: 'col-span-2 row-span-2' },
+  { name: 'race-1.jpg', alt: 'Skikjöring-Rennen am White Turf', cls: 'col-span-2' },
+  { name: 'race-3.jpg', alt: 'Auf dem gefrorenen St. Moritzersee', cls: '' },
+  { name: 'race-4.jpg', alt: 'Rennszene am White Turf', cls: '' },
+  { name: 'race-2.jpg', alt: 'Skikjöring in voller Fahrt', cls: '' },
+  { name: 'race-5.jpg', alt: 'Skikjöring St. Moritz', cls: '' },
+  { name: 'hero.jpg', alt: 'Jakob Broger im Rennen', cls: 'col-span-2' },
 ];
+
+// A full-size WebP per gallery photo, used by the lightbox.
+const galleryFull = {};
+for (const g of gallery) {
+  galleryFull[g.name] = (await getImage({ src: photo(g.name), width: 2000, format: 'webp', quality: 80 })).src;
+}
 ---
 
 <Base>
   <!-- ===== HERO ===== -->
   <section id="top" class="relative isolate flex min-h-screen items-center overflow-hidden">
-    <img
-      src={img('photos/hero.jpg')}
+    <Image
+      src={photo('hero.jpg')}
       alt="Jakob Broger beim Skikjöring am White Turf St. Moritz"
       class="parallax-img -z-10 object-center"
+      widths={[1200, 2000]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
       data-parallax="0.18"
       data-zoom="0.14"
       data-pointer="22"
-      fetchpriority="high"
     />
     <div class="absolute inset-0 -z-10 bg-gradient-to-b from-ink/70 via-ink/45 to-ink/85"></div>
 
@@ -91,14 +105,15 @@ const gallery = [
 
   <!-- ===== RÜCKTRITT / STATEMENT ===== -->
   <section id="ruecktritt" class="relative isolate scroll-mt-16 overflow-hidden bg-ink py-28 text-snow">
-    <img
-      src={img('photos/race-5.jpg')}
+    <Image
+      src={photo('race-5.jpg')}
       alt=""
-      aria-hidden="true"
       class="parallax-img -z-10 opacity-25"
+      widths={[1200, 2000]}
+      sizes="100vw"
+      loading="lazy"
       data-parallax="0.14"
       data-zoom="0.1"
-      loading="lazy"
     />
     <div class="absolute inset-0 -z-10 bg-gradient-to-b from-ink via-ink/85 to-ink"></div>
 
@@ -127,7 +142,7 @@ const gallery = [
 
     <div class="mt-14 grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
       <div class="reveal">
-        <img src={img('photos/race-2.jpg')} alt="Jakob Broger beim Skikjöring" class="aspect-[4/5] w-full rounded-2xl object-cover shadow-sm" loading="lazy" />
+        <Image src={photo('race-2.jpg')} alt="Jakob Broger beim Skikjöring" class="aspect-[4/5] w-full rounded-2xl object-cover shadow-sm" widths={[500, 900]} sizes="(min-width: 1024px) 40vw, 90vw" loading="lazy" />
         <dl class="mt-6 grid grid-cols-2 gap-3">
           {personal.map((p) => (
             <div class="rounded-xl border border-frost bg-white px-4 py-3">
@@ -219,14 +234,15 @@ const gallery = [
 
   <!-- ===== PARALLAX DIVIDER ===== -->
   <section class="relative isolate flex h-[55vh] min-h-[360px] items-center justify-center overflow-hidden">
-    <img
-      src={img('photos/race-1.jpg')}
+    <Image
+      src={photo('race-1.jpg')}
       alt=""
-      aria-hidden="true"
       class="parallax-img -z-10"
+      widths={[1200, 2000]}
+      sizes="100vw"
+      loading="lazy"
       data-parallax="0.22"
       data-zoom="0.12"
-      loading="lazy"
     />
     <div class="absolute inset-0 -z-10 bg-ink/55"></div>
     <div data-parallax="-0.12">
@@ -289,11 +305,18 @@ const gallery = [
           <button
             type="button"
             class:list={['gallery-item reveal group relative overflow-hidden rounded-2xl', g.cls]}
-            data-full={img(g.src)}
+            data-full={galleryFull[g.name]}
             data-caption={g.alt}
             aria-label={`Bild vergrössern: ${g.alt}`}
           >
-            <img src={img(g.src)} alt={g.alt} class="h-full w-full object-cover transition duration-700 group-hover:scale-110" loading="lazy" />
+            <Image
+              src={photo(g.name)}
+              alt={g.alt}
+              class="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+              widths={[400, 700, 1000]}
+              sizes="(min-width: 768px) 25vw, 50vw"
+              loading="lazy"
+            />
           </button>
         ))}
       </div>
@@ -346,7 +369,7 @@ const gallery = [
               p.dark ? 'border-white/15 bg-ink' : 'border-frost bg-white',
             ]}
           >
-            <img src={img(`logos/${p.logo}`)} alt={p.name} class="max-h-12 max-w-[85%] w-auto object-contain" loading="lazy" />
+            <img src={logo(p.logo)} alt={p.name} class="max-h-12 max-w-[85%] w-auto object-contain" loading="lazy" />
           </a>
         ))}
       </div>

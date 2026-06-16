@@ -66,10 +66,13 @@ want to review before publishing.
 It is one page; the nav items are anchor links (`#person`, `#resultate`, …) that
 scroll to sections within `src/pages/index.astro`.
 
-### Adding an image
-Drop the file into `public/images/photos/`, then reference it in code as
-`img('photos/yourfile.jpg')` (the `img()` helper in `index.astro` adds the
-correct path prefix automatically — never hard-code `/broger/...`).
+### Adding a photo
+Drop the file into `src/assets/photos/` (NOT `public/`). Astro optimizes
+everything there at build time — resizing, WebP, and responsive `srcset` are
+automatic, so you can use a large original and it will be served efficiently.
+Reference it via the `photo('yourfile.jpg')` helper passed to `<Image>` in
+`index.astro`. Sponsor logos are the exception: they stay in
+`public/images/logos/` and use the `logo()` helper.
 
 ## 4. Publish changes (deploy)
 
