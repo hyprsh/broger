@@ -25,8 +25,8 @@ wenn du ihm in normaler Sprache sagst, was geändert werden soll.
 4. Sende Codex diese Nachricht:
 
    ```text
-   Clone https://github.com/hyprsh/broger.git into a folder called broger-site.
-   When it is cloned, tell me to open that folder as the project.
+   Klone https://github.com/hyprsh/broger.git in einen Ordner namens broger-site.
+   Wenn das erledigt ist, sag mir, dass ich diesen Ordner als Projekt öffnen soll.
    ```
 
 5. Wenn Codex meldet, dass das Klonen fertig ist, öffne oder wechsle in Codex
@@ -34,7 +34,7 @@ wenn du ihm in normaler Sprache sagst, was geändert werden soll.
 6. Sende danach zum Start zum Beispiel diese Nachricht:
 
    ```text
-   Read the instructions, then tell me what this website is and how you would update it.
+   Lies die Anweisungen und sag mir danach, was diese Website ist und wie du sie aktualisieren würdest.
    ```
 
 Nachdem das Repository geklont und geöffnet ist, liest Codex automatisch
