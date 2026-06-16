@@ -325,8 +325,14 @@ for (const g of gallery) {
 
   <!-- Lightbox overlay -->
   <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Bildansicht">
-    <button id="lightbox-close" class="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-snow transition hover:bg-white/20" aria-label="Schliessen">
+    <button id="lightbox-close" class="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-snow transition hover:bg-white/20" aria-label="Schliessen">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+    <button id="lightbox-prev" class="absolute left-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-snow transition hover:bg-white/20 sm:left-6" aria-label="Vorheriges Bild">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6" /></svg>
+    </button>
+    <button id="lightbox-next" class="absolute right-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-snow transition hover:bg-white/20 sm:right-6" aria-label="Nächstes Bild">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6" /></svg>
     </button>
     <figure class="flex flex-col items-center gap-3">
       <img id="lightbox-img" src="" alt="" />
@@ -508,15 +514,36 @@ for (const g of gallery) {
     render();
   }
 
-  // Lightbox: click a gallery tile to view the photo full-size.
+  // Lightbox: click a gallery tile to view it full-size, then page through
+  // all photos with arrows, keyboard (← →), or swipe.
   const lb = document.getElementById('lightbox');
   const lbImg = document.getElementById('lightbox-img');
   const lbCap = document.getElementById('lightbox-cap');
   const lbClose = document.getElementById('lightbox-close');
-  const openLightbox = (full, caption) => {
-    lbImg.setAttribute('src', full);
-    lbImg.setAttribute('alt', caption || '');
-    lbCap.textContent = caption || '';
+  const lbPrev = document.getElementById('lightbox-prev');
+  const lbNext = document.getElementById('lightbox-next');
+
+  const slides = [...document.querySelectorAll('.gallery-item')].map((b) => ({
+    full: b.getAttribute('data-full'),
+    cap: b.getAttribute('data-caption'),
+  }));
+  let current = 0;
+
+  const preload = (i) => {
+    const s = slides[(i + slides.length) % slides.length];
+    if (s) new Image().src = s.full;
+  };
+  const show = (i) => {
+    current = (i + slides.length) % slides.length; // wrap around
+    const s = slides[current];
+    lbImg.setAttribute('src', s.full);
+    lbImg.setAttribute('alt', s.cap || '');
+    lbCap.textContent = s.cap || '';
+    preload(current + 1); // prefetch neighbours for snappy paging
+    preload(current - 1);
+  };
+  const openLightbox = (i) => {
+    show(i);
     lb.classList.add('open');
     document.body.style.overflow = 'hidden';
   };
@@ -524,16 +551,32 @@ for (const g of gallery) {
     lb.classList.remove('open');
     document.body.style.overflow = '';
   };
-  document.querySelectorAll('.gallery-item').forEach((btn) =>
-    btn.addEventListener('click', () =>
-      openLightbox(btn.getAttribute('data-full'), btn.getAttribute('data-caption'))
-    )
+  const next = () => show(current + 1);
+  const prev = () => show(current - 1);
+
+  document.querySelectorAll('.gallery-item').forEach((btn, i) =>
+    btn.addEventListener('click', () => openLightbox(i))
   );
   lbClose?.addEventListener('click', closeLightbox);
+  lbNext?.addEventListener('click', (e) => { e.stopPropagation(); next(); });
+  lbPrev?.addEventListener('click', (e) => { e.stopPropagation(); prev(); });
   lb?.addEventListener('click', (e) => {
     if (e.target === lb) closeLightbox();
   });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && lb?.classList.contains('open')) closeLightbox();
+    if (!lb?.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    else if (e.key === 'ArrowRight') next();
+    else if (e.key === 'ArrowLeft') prev();
   });
+
+  // Swipe navigation on touch devices.
+  let touchX = null;
+  lb?.addEventListener('touchstart', (e) => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+  lb?.addEventListener('touchend', (e) => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 45) (dx < 0 ? next : prev)();
+    touchX = null;
+  }, { passive: true });
 </script>
