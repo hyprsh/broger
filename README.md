@@ -11,17 +11,17 @@ Replaces the previous WordPress site.
 ## Anleitung: diese Website mit Codex bearbeiten
 
 Du musst nicht wissen, wie Astro, Tailwind, Git oder GitHub Pages funktionieren.
-Codex kann normale Website-Anpassungen fuer dich machen und veroeffentlichen,
-wenn du ihm in normaler Sprache sagst, was geaendert werden soll.
+Codex kann normale Website-Anpassungen für dich machen und veröffentlichen,
+wenn du ihm in normaler Sprache sagst, was geändert werden soll.
 
 ### Erste Einrichtung
 
-1. Installiere die Codex-App fuer macOS oder Windows von OpenAI.
-2. Oeffne Codex und melde dich mit deinem ChatGPT-Konto an. Wenn du stattdessen
+1. Installiere die Codex-App für macOS oder Windows von OpenAI.
+2. Öffne Codex und melde dich mit deinem ChatGPT-Konto an. Wenn du stattdessen
    einen OpenAI API Key verwendest, sind gewisse Cloud- oder Workspace-Funktionen
-   eventuell nicht verfuegbar.
-3. Waehle in Codex **Open project** oder **Select a project folder** und dann
-   einen normalen Ort fuer deine Websites, zum Beispiel `Documents` oder `Sites`.
+   eventuell nicht verfügbar.
+3. Wähle in Codex **Open project** oder **Select a project folder** und dann
+   einen normalen Ort für deine Websites, zum Beispiel `Documents` oder `Sites`.
 4. Sende Codex diese Nachricht:
 
    ```text
@@ -29,7 +29,7 @@ wenn du ihm in normaler Sprache sagst, was geaendert werden soll.
    When it is cloned, tell me to open that folder as the project.
    ```
 
-5. Wenn Codex meldet, dass das Klonen fertig ist, oeffne oder wechsle in Codex
+5. Wenn Codex meldet, dass das Klonen fertig ist, öffne oder wechsle in Codex
    zum neuen Ordner `broger-site`.
 6. Sende danach zum Start zum Beispiel diese Nachricht:
 
@@ -37,23 +37,23 @@ wenn du ihm in normaler Sprache sagst, was geaendert werden soll.
    Read the instructions, then tell me what this website is and how you would update it.
    ```
 
-Nachdem das Repository geklont und geoeffnet ist, liest Codex automatisch
+Nachdem das Repository geklont und geöffnet ist, liest Codex automatisch
 `AGENTS.md`. Diese Datei sagt Codex, wo die Inhalte der Website liegen, wie die
-Website lokal geprueft wird und wie sie veroeffentlicht wird.
+Website lokal geprüft wird und wie sie veröffentlicht wird.
 
-### Aenderungen beauftragen
+### Änderungen beauftragen
 
-Schreibe deine Wuensche in normaler Sprache. Gute Beispiele:
+Schreibe deine Wünsche in normaler Sprache. Gute Beispiele:
 
 - `Aktualisiere die Biografie mit diesem neuen Text: ...`
-- `Fuege diesen Sponsor und dieses Logo hinzu.`
+- `Füge diesen Sponsor und dieses Logo hinzu.`
 - `Ersetze das grosse Startbild durch dieses Bild.`
-- `Fuege ein neues Resultat in die Resultattabelle ein.`
-- `Pruefe die Website, baue sie, veroeffentliche sie und sag mir, wenn sie live ist.`
+- `Füge ein neues Resultat in die Resultattabelle ein.`
+- `Prüfe die Website, baue sie, veröffentliche sie und sag mir, wenn sie live ist.`
 
-Bei normalen Textaenderungen soll Codex `src/data/site.js` bearbeiten,
-`npm run build` ausfuehren, die Aenderung committen, auf `main` pushen und
-warten, bis GitHub Pages fertig veroeffentlicht hat. Danach ist die Website hier
+Bei normalen Textänderungen soll Codex `src/data/site.js` bearbeiten,
+`npm run build` ausführen, die Änderung committen, auf `main` pushen und
+warten, bis GitHub Pages fertig veröffentlicht hat. Danach ist die Website hier
 sichtbar:
 
 - Projektseite: `https://hyprsh.github.io/broger/`
@@ -61,13 +61,13 @@ sichtbar:
 
 ### Was Codex braucht
 
-- Fuer Textaenderungen: fuege den genauen Text ein oder beschreibe die Idee und
+- Für Textänderungen: füge den genauen Text ein oder beschreibe die Idee und
   bitte Codex, den Text auf Deutsch mit Schweizer Schreibweise zu formulieren.
-- Fuer Fotos: gib Codex die Bilddatei und sage, wo das Bild erscheinen soll.
-- Fuer Sponsorenlogos: gib Codex die Logodatei, den Sponsornamen und falls
+- Für Fotos: gib Codex die Bilddatei und sage, wo das Bild erscheinen soll.
+- Für Sponsorenlogos: gib Codex die Logodatei, den Sponsornamen und falls
   vorhanden die Website.
-- Wenn du unsicher bist: bitte Codex, die Aenderung zuerst lokal zu zeigen, bevor
-  sie veroeffentlicht wird.
+- Wenn du unsicher bist: bitte Codex, die Änderung zuerst lokal zu zeigen, bevor
+  sie veröffentlicht wird.
 
 ## Owner guide: use this site with Codex
 
