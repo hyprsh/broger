@@ -55,7 +55,7 @@ export const stats = {
 
 // Notable horses for the Resultate page highlight cards.
 export const topHorses = [
-  { name: 'Volta', years: '1999–2004', trainer: 'Miro Weiss', owner: 'Stall Zürisee', note: '12 Siege aus 21 Starts — das erfolgreichste Gespann der Karriere.' },
+  { name: 'Volta', years: '1999–2004', trainer: 'Miro Weiss', owner: 'Stall Zürisee', note: '12 Siege aus 21 Starts, das erfolgreichste Gespann der Karriere.' },
   { name: 'King George', years: '2007–2011', trainer: 'Miro Weiss', owner: 'Charlotte Haselbach', note: '8 Siege aus 11 Starts auf dem gefrorenen St. Moritzersee.' },
   { name: 'Vienna Woods', years: '2020–2022', trainer: 'Carina Fey', owner: 'Stall Allegra Racing Club', note: 'Die letzten Saisons vor dem Rücktritt 2022.' },
   { name: 'Efir', years: '1997–1998', trainer: '', owner: '', note: 'Frühe Erfolge zu Beginn der Skikjöring-Laufbahn.' },
