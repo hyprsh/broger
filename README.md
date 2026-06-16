@@ -19,18 +19,26 @@ folder and describe the change in normal language.
 1. Install the Codex app for macOS or Windows from OpenAI.
 2. Open Codex and sign in with your ChatGPT account. If you use an OpenAI API key
    instead, some cloud/workspace features may not be available.
-3. In Codex, choose **Open project** or **Select a project folder**.
-4. Select this folder: `broger-site`.
-5. Make sure Codex is working locally on your computer, then send a first
-   message such as:
+3. In Codex, choose **Open project** or **Select a project folder** and select a
+   normal place for your websites, for example `Documents` or `Sites`.
+4. Send this message to Codex:
+
+   ```text
+   Clone https://github.com/hyprsh/broger.git into a folder called broger-site.
+   When it is cloned, tell me to open that folder as the project.
+   ```
+
+5. When Codex says the clone is finished, open or switch to the new
+   `broger-site` folder in Codex.
+6. Send a first message such as:
 
    ```text
    Read the instructions, then tell me what this website is and how you would update it.
    ```
 
-Codex reads `AGENTS.md` automatically when it starts in this folder. That file
-tells Codex where the website content lives, how to preview changes, and how to
-publish the site.
+After the repo is cloned and opened, Codex reads `AGENTS.md` automatically. That
+file tells Codex where the website content lives, how to preview changes, and how
+to publish the site.
 
 ### Asking for updates
 
