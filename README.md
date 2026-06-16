@@ -51,6 +51,31 @@ Schreibe deine Wünsche in normaler Sprache. Gute Beispiele:
 - `Füge ein neues Resultat in die Resultattabelle ein.`
 - `Prüfe die Website, baue sie, veröffentliche sie und sag mir, wenn sie live ist.`
 
+### Lokal prüfen, bevor du veröffentlichst
+
+Wenn du die Änderung zuerst ansehen möchtest, sag Codex:
+
+```text
+Mach diese Änderung, starte danach die lokale Vorschau und gib mir den Link. Bitte noch nicht veröffentlichen.
+```
+
+Codex soll dann die Website lokal starten und dir einen Link wie
+`http://localhost:4321` geben. Öffne diesen Link im Browser und prüfe die
+Änderung. Wenn etwas noch nicht stimmt, beschreibe Codex einfach, was anders
+sein soll.
+
+### Veröffentlichen
+
+Wenn die Vorschau gut aussieht, sag Codex:
+
+```text
+Die Vorschau passt. Baue die Website, veröffentliche sie und sag mir, wenn sie live ist.
+```
+
+Codex soll dann `npm run build` ausführen, die Änderung committen, auf `main`
+pushen und warten, bis GitHub Pages fertig ist. Erst danach ist die Änderung
+online sichtbar.
+
 Bei normalen Textänderungen soll Codex `src/data/site.js` bearbeiten,
 `npm run build` ausführen, die Änderung committen, auf `main` pushen und
 warten, bis GitHub Pages fertig veröffentlicht hat. Danach ist die Website hier
@@ -110,6 +135,29 @@ Write requests in plain language. Useful examples:
 - `Replace the hero photo with this image.`
 - `Add a new result to the results table.`
 - `Check the website, build it, publish it, and tell me when it is live.`
+
+### Preview locally before publishing
+
+If you want to review the change first, tell Codex:
+
+```text
+Make this change, then start the local preview and give me the link. Please do not publish yet.
+```
+
+Codex should start the website locally and give you a link such as
+`http://localhost:4321`. Open that link in your browser and check the change. If
+something is not right yet, just tell Codex what should be different.
+
+### Publishing
+
+When the preview looks good, tell Codex:
+
+```text
+The preview looks good. Build the website, publish it, and tell me when it is live.
+```
+
+Codex should then run `npm run build`, commit the change, push to `main`, and
+wait until GitHub Pages finishes. Only then is the change visible online.
 
 For normal text changes, Codex should edit `src/data/site.js`, run
 `npm run build`, commit the change, push to `main`, and wait for the GitHub Pages
